@@ -1,0 +1,10 @@
+services:
+  rpi-repo:
+    build: .
+    container_name: rpi-repo
+    ports:
+      - "8080:80"
+    volumes:
+      - /mnt/user/appdata/rpi-repo/srv:/srv/rpi-repo
+      - /mnt/user/appdata/rpi-repo/packages:/packages:ro
+    restart: unless-stopped
