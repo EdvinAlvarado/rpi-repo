@@ -34,6 +34,13 @@ EOF
     echo "Generated GPG key: $KEY_ID"
 fi
 
+# Set ultimate trust on the repo key (idempotent)
+KEY_ID=$(gpg --list-keys --with-colons | grep fpr | head -1 | cut -d: -f10)
+echo "$KEY_ID:5:" | gpg --import-ownertrust
+
+# Re-export public key
+gpg --armor --export "$KEY_ID" > "$REPO_DIR/public.key"
+
 # Create distributions config if missing
 if [ ! -f "$CONF_DIR/distributions" ]; then
     cat > "$CONF_DIR/distributions" <<EOF
@@ -60,10 +67,6 @@ basedir $REPO_DIR
 ask-passphrase
 EOF
 fi
-
-# Export public key on every start
-KEY_ID=$(gpg --list-keys --with-colons | grep fpr | head -1 | cut -d: -f10)
-gpg --armor --export "$KEY_ID" > "$REPO_DIR/public.key"
 
 chmod -R a+rX "$REPO_DIR"
 
