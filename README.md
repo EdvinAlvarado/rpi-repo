@@ -13,17 +13,29 @@ Copy this git wherever you store the compose stack.
 docker compose up -d --build
 ```
 
-## Addig packages
-Copy packages to the /mnt/user/appdata/rpi-repo/packages directory. The packages should be in the form of .deb files.
+## Adding packages
+Copy packages to the /mnt/user/appdata/rpi-repo/packages directory. The packages should be in the form of .deb files
+.
 Run the following command to update the repository:
 ```bash
 docker exec rpi-repo bash -c 'for f in /packages/*.deb; do reprepro includedeb bookworm "$f"; done'
 ```
 
+Note you can add packges
+
 ## Raspbery Pi setup
+Add the repo as Truisted.
+```/etc/apt/sources.list.d/flbt.sources
+Types: deb
+URIs: http://au-nas-01:8081
+Suites: trixie
+Components: main
+Trusted: yes
+```
+
+Update
 ```bash
-curl -fsSL http://your-unraid-ip:8080/public.key | sudo gpg --dearmor -o /etc/apt/keyrings/rpi-repo.gpg
-echo "deb [signed-by=/etc/apt/keyrings/rpi-repo.gpg] http://your-unraid-ip:8080 bookworm main" | sudo tee /etc/apt/sources.list.d/rpi-repo.list
 sudo apt update
 ```
-Update the URL to your Unraid server's IP address and port number in the above commands. After running these commands, you should be able to install packages from your local repository using `apt install package-name`.
+Update the URL to your Unraid server's IP address and port number in the above commands. After running these command
+s, you should be able to install packages from your local repository using `apt install package-name`.
